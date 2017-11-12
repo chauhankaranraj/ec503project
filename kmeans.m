@@ -1,28 +1,76 @@
+%% ORIGINAL DATA
 load fisheriris
 X = meas(:,3:4);
 k = 3;
 
-% figure;
-% plot(X(:,1),X(:,2),'k*','MarkerSize',5);
-% title 'Fisher''s Iris Data';
-% xlabel 'Petal Lengths (cm)';
-% ylabel 'Petal Widths (cm)';
+figure;
+plot(X(:,1),X(:,2), 'k.','MarkerSize', 15);
+title 'Fisher''s Iris Data';
+xlabel 'Petal Lengths (cm)';
+ylabel 'Petal Widths (cm)';
 
+
+%% K-MEANS
+
+% randomly select k points as centroids
 centroids = get_initial_centroids(X, 3);
-closest_centroids = get_closest_centroids(X, centroids);
-kpp_centroids = get_kpp_centroids(X, 3);
 
-max_iterations = 10;
+max_iterations = 100;
 for i=1:max_iterations
 
+    % find which is the closest centroid for each point
     closest_centroids = get_closest_centroids(X, centroids);
     
     for j = 1:k
+        
+        % get all points correspoding to centroid j
         centroid_pts_idx = closest_centroids == j;
-        centroids(:, j) = mean(X(:, centroid_pts_idx));
+        
+        % set new centroid j as mean of all points closest to previous j
+        centroids(j, :) = mean(X(centroid_pts_idx, :));
+    
     end
     
 end
+
+figure;
+plot(centroids(:,1), centroids(:,2), 'k.','MarkerSize', 15);
+title 'K-means centroids for Fisher''s Iris Data';
+xlabel 'Petal Lengths (cm)';
+ylabel 'Petal Widths (cm)';
+
+
+%% K-MEANS++
+
+% select k points as centroids as per k-means++
+centroids = get_kpp_centroids(X, 3);
+
+max_iterations = 100;
+for i=1:max_iterations
+    
+    % find which is the closest centroid for each point
+    closest_centroids = get_closest_centroids(X, centroids);
+    
+    for j = 1:k
+        
+        % get all points correspoding to centroid j
+        centroid_pts_idx = closest_centroids == j;
+        
+        % set new centroid j as mean of all points closest to previous j
+        centroids(j, :) = mean(X(centroid_pts_idx, :));
+    
+    end
+    
+end
+
+figure;
+plot(centroids(:,1), centroids(:,2), 'k.','MarkerSize', 15);
+title 'K-means++ centroids for Fisher''s Iris Data';
+xlabel 'Petal Lengths (cm)';
+ylabel 'Petal Widths (cm)';
+
+
+%% HELPER FUNCTIONS
 
 function closest_centroids = get_closest_centroids(X, centroids)
 % get_closest_centroids  Finds closest centroid to each point

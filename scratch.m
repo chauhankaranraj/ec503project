@@ -10,7 +10,5 @@
 % bar
 
 a = [1 2 3 4; 5 8 7 1]
-[foo, bar] = max(a, [], 2);
-foo
-bar
+mean(a)
 % fee
