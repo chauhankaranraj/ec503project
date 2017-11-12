@@ -9,7 +9,7 @@ k = 3;
 % ylabel 'Petal Widths (cm)';
 
 centroids = get_initial_centroids(X, 3);
-closest_centroids = get_closest_centroids(X, inital_centroids);
+closest_centroids = get_closest_centroids(X, centroids);
 
 max_iterations = 10;
 for i=1:max_iterations
@@ -24,24 +24,46 @@ for i=1:max_iterations
 end
 
 function closest_centroids = get_closest_centroids(X, centroids)
+% get_closest_centroids  Finds closest centroid to each point
+%
+% Assumes each column of X (nxd) is dimension and each row is data point
+% Each column of centroids (kxd) is dimension and each row is data point
+%
+% Returns column vector (nx1) of centroid number closest to each point
 
-    % mxn matrix where row i,col j is distance of jth pt from ith centroid 
-    distances_from_centroids = zeros(size(centroids,2), size(X,2));
+    % number of centroids
+    k = size(centroids,1);
+
+    % nxk matrix where row i,col j is distance of ith pt from jth centroid 
+    distances_from_centroids = zeros(size(X,1), k);
     
     % calculate distance from each centroid
-    for c_num = 1:size(centroids, 2)
+    for c_num = 1:k
         
-        distances_from_centroids(c_num) = (X - centroids(c_num, :)) .^ 2;
+        distances_from_centroids(:, c_num) = sum(((X - centroids(c_num, :)) .^ 2), 2);
     
     end
     
     % get the closest centroid number
-    [~, closest_centroids] = max(distances_from_centroids);
+    [~, closest_centroids] = min(transpose(distances_from_centroids));
+    
+    % value at i,1 is closest centroid for data point i
+    closest_centroids = transpose(closest_centroids);
 
 end
 
 
 function initial_centroids = get_smart_centroids(X, k, is_col_xi)
+    
+    % default assumes X is dxn matrix
+    if nargin < 3
+        is_col_xi = 1;
+    end
+    
+    % transpose if input is not in the required form
+    if ~is_col_xi
+        X = transpose(X);
+    end
 
     % initialize matrix as NaN's so that max funcion chooses defined value over other centroids
     initial_centroids = NaN(size(X,1), k);
@@ -49,7 +71,7 @@ function initial_centroids = get_smart_centroids(X, k, is_col_xi)
     % select first centroid randomly
     initial_centroids(:, 1) = X(:, randi([1 k]));
     
-    % initi
+    % initialize distances of each point from each centroid
     distances = zeros(k, size(X,2));
     
     for c_num = 1:k
@@ -70,22 +92,21 @@ function initial_centroids = get_smart_centroids(X, k, is_col_xi)
 end
 
 
-function initial_centroids = get_initial_centroids(X, k, is_col_xi)
-% each col of X is a data point
-    
-    % default assumes X is d x n matrix
-    if nargin < 3
-        is_col_xi = 1;
-    end
+function initial_centroids = get_initial_centroids(X, k)
+% get_initial_centroids  Randomly chooses k points as 
+%
+% Assumes each column of X (nxd) is dimension and each row is data point
+% Each column of centroids (kxd) is dimension and each row is data point
+%
+% Returns column vector (nx1) of centroid number closest to each point
 
-    if ~is_col_xi
-        X = transpose(X);
-    end
+% Assumes each column of X is dimension and each row is data point
+% Each column of centroids is dimension and each row is data point
 
     % indices of data points to be selected as initial centroids
-    x_indices = randperm(size(X,2), k);
+    x_indices = randperm(size(X,1), k);
     
     % extract data points at chosen indices
-    initial_centroids = X(:, x_indices);
+    initial_centroids = X(x_indices, :);
 
 end
