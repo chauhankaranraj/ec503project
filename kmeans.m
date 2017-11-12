@@ -1,13 +1,16 @@
 %% ORIGINAL DATA
 load fisheriris
+
 X = meas(:,3:4);
+y = grp2idx(categorical(species));
+
 k = 3;
 
-figure;
-plot(X(:,1),X(:,2), 'k.','MarkerSize', 15);
-title 'Fisher''s Iris Data';
-xlabel 'Petal Lengths (cm)';
-ylabel 'Petal Widths (cm)';
+% figure;
+% plot(X(:,1),X(:,2), 'k.','MarkerSize', 15);
+% title 'Fisher''s Iris Data';
+% xlabel 'Petal Lengths (cm)';
+% ylabel 'Petal Widths (cm)';
 
 
 %% K-MEANS
@@ -33,11 +36,28 @@ for i=1:max_iterations
     
 end
 
+% figure;
+% plot(centroids(:,1), centroids(:,2), 'k.','MarkerSize', 15);
+% title 'K-means centroids for Fisher''s Iris Data';
+% xlabel 'Petal Lengths (cm)';
+% ylabel 'Petal Widths (cm)';
+
+% calculate distance of each point from each centroid
+dist_from_centroids = NaN(size(X,1), k);
+for c = 1:k
+    dist_from_centroids(:, c) = sum((X - centroids(c, :)).^2, 2);
+end
+
+% select closest centroid as representative class
+[~, k_preds] = min(dist_from_centroids, [], 2);
+
 figure;
-plot(centroids(:,1), centroids(:,2), 'k.','MarkerSize', 15);
-title 'K-means centroids for Fisher''s Iris Data';
-xlabel 'Petal Lengths (cm)';
-ylabel 'Petal Widths (cm)';
+plot(X(k_preds==1,1), X(k_preds==1,2), 'r.', 'MarkerSize', 15);
+hold on
+plot(X(k_preds==2,1), X(k_preds==2,2), 'g.', 'MarkerSize', 15);
+hold on
+plot(X(k_preds==3,1), X(k_preds==3,2), 'b.', 'MarkerSize', 15);
+title 'k-means on Fisher''s Iris Data';
 
 
 %% K-MEANS++
@@ -63,11 +83,28 @@ for i=1:max_iterations
     
 end
 
+% figure;
+% plot(centroids(:,1), centroids(:,2), 'k.','MarkerSize', 15);
+% title 'K-means++ centroids for Fisher''s Iris Data';
+% xlabel 'Petal Lengths (cm)';
+% ylabel 'Petal Widths (cm)';
+
+% calculate distance of each point from each centroid
+dist_from_centroids = NaN(size(X,1), k);
+for c = 1:k
+    dist_from_centroids(:, c) = sum((X - centroids(c, :)).^2, 2);
+end
+
+% select closest centroid as representative class
+[~, kpp_preds] = min(dist_from_centroids, [], 2);
+
 figure;
-plot(centroids(:,1), centroids(:,2), 'k.','MarkerSize', 15);
-title 'K-means++ centroids for Fisher''s Iris Data';
-xlabel 'Petal Lengths (cm)';
-ylabel 'Petal Widths (cm)';
+plot(X(kpp_preds==1,1), X(kpp_preds==1,2), 'r.', 'MarkerSize', 15);
+hold on
+plot(X(kpp_preds==2,1), X(kpp_preds==2,2), 'g.', 'MarkerSize', 15);
+hold on
+plot(X(kpp_preds==3,1), X(kpp_preds==3,2), 'b.', 'MarkerSize', 15);
+title 'k-means++ on Fisher''s Iris Data';
 
 
 %% HELPER FUNCTIONS
