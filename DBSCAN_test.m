@@ -1,7 +1,11 @@
-cluster1 = normrnd(-5, 1, 100, 1);
-cluster2 = normrnd(5, 1, 100, 1);
+load fisheriris
 
-X = [cluster1; cluster2];
+X = meas(:,3:4);
 
-[assignments, li_noise] = DBSCAN(X, 2, 5);
+% cluster1 = normrnd(-5, 1, 100, 1);
+% cluster2 = normrnd(5, 1, 100, 1);
+
+% X = [cluster1; cluster2];
+
+[assignments, li_noise] = DBSCAN(X, 0.1, 5);
 
