@@ -47,45 +47,44 @@ DBSCAN(DB, dist, eps, minPts) {
 
 
     for ii = 1:num_samples
-        if li_visited(ii)
-            continue
-        else
-            grow_cluster(ii)
+        if ~li_visited(ii)
+            li_neighbours = get_neighbours(ii);
+            if sum(li_neighbours) < min_points
+               li_noise(ii) = true;
+            else
+                num_clusters = num_clusters + 1;
+                grow_cluster(ii);
+            end
         end
     end
 
     % returns the points that are considered the neighboours of the input
     % point given by the index 'idx'
     function li_neighbours = get_neighbours(idx)
-        li_neighbours = transpose(DM(idx, :) <= epsilon);
+        li_neighbours = DM(:, idx) <= epsilon;
     end
     
 
     % given a point in a cluter, adds more points to it by scanning all the
     % surrounding neighbours of the point
     function grow_cluster(idx)
+        assignments(idx) = num_clusters;
         neighbours = get_neighbours(idx) & ~li_visited;
         
-        if nnz(neighbours) < min_points
-            li_noise(idx) = true;
-        else
-            assignments(idx) = num_clusters;
-            while nnz(neighbours) > min_points
-                % remove from visit queue, add to cluster, and proess its
-                % neighbours
-                p_index = find(neighbours, 1);
-                neighbours(p_index) = 0;
-                li_visited(p_index) = true;
-                
-                % perfrom BFS on all the beighbours of the point idx
-                p_neighbours = get_neighbours(p_index) & ~li_visited;
-                if nnz(p_neighbours) >= min_points
-                    neighbours = neighbours | p_neighbours;
-                end
-                li_noise(idx) = false;
-                assignments(idx) = num_clusters;
+        while sum(neighbours) > 0
+            % remove from visit queue, add to cluster, and proess its
+            % neighbours
+            p_index = find(neighbours, 1);
+            li_visited(p_index) = true;
+            li_noise(p_index) = false;
+            neighbours(p_index) = 0;
+            
+            % perfrom BFS on all the beighbours of the point idx
+            p_neighbours = get_neighbours(p_index) & ~li_visited;
+            if sum(p_neighbours) >= min_points
+                neighbours = neighbours | p_neighbours;
             end
-            num_clusters = num_clusters + 1;
-        end  
+            assignments(p_index) = num_clusters;
+        end
     end
 end
