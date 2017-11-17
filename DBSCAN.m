@@ -70,7 +70,7 @@ DBSCAN(DB, dist, eps, minPts) {
     function grow_cluster(idx)
         assignments(idx) = num_clusters;
         neighbours = get_neighbours(idx) & ~li_visited;
-        
+            
         while sum(neighbours) > 0
             % remove from visit queue, add to cluster, and proess its
             % neighbours
