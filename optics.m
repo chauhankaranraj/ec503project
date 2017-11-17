@@ -4,7 +4,7 @@ X = meas(:,3:4);
 y = grp2idx(categorical(species));
 
 
-function TODO = optics_cluster(X, epsilon, min_pts)
+function [ordered_idx_list, reach_dists] = optics_cluster(X, epsilon, min_pts)
 % optics Uses the OPTICS algorithm to cluster dataset as input X, epsilon
 % value as input epsilon, MinPts as input min_pts
 %
@@ -42,16 +42,44 @@ function TODO = optics_cluster(X, epsilon, min_pts)
         
         if ~isnan(get_core_dist(X(p_idx), X, epsilon, min_pts))
             
-            % get the updated reachability distances and priority queue seeds
-            [reach_dists, seeds] = update(X(p_idx,:), X, epsilon, min_pts, seeds, is_idx_neighbor, reach_dists);
+            % priority queue. value at idx is priority of point at idx
+            priorities = zeros(num_pts, 1) - 1;
             
-%             % TODO
-%             for each next q in Seeds
-%              N' = getNeighbors(q, eps)
-%              mark q as processed
-%              output q to the ordered list
-%              if (core-distance(q, eps, Minpts) != UNDEFINED)
-%                 update(N', q, Seeds, eps, Minpts)
+            % get the updated reachability distances and priority queue seeds
+            [reach_dists, priorities] = update(X(p_idx,:), X, epsilon, min_pts, priorities, is_idx_neighbor, reach_dists);
+            
+            % sorts descending, gives indices of points with descending priorities
+            [priorities, pr_pt_idx] = sort(priorities, 'descend');
+            
+            for pr_q_idx = 1:numel(priorities)
+                
+                % q_idx is index of point in dataset
+                q_idx = pr_pt_idx(pr_q_idx);
+                
+                % no more points with non-negative priority, so we're done
+                if priorities(q_idx)==-1
+                    break
+                end
+                
+                % TODO: can put this after checking for core dist
+                % get neighbors of q
+                q_is_idx_neighbor = get_neighbors(X(q_idx, :), X, epsilon);
+                
+                % mark q as processed
+                is_idx_processed(q_idx) = true;
+                
+                % add q to the ordered list by finding first nan and replacing it with q
+                ordered_idx_list(find(isnan(ordered_idx_list),1), 1) = q_idx;
+                
+                % if core dist of q is undefined then update
+                if ~isnan(get_core_dist(X(q_idx), X, epsilon, min_pts))
+                   
+                    % get the updated reachability distances and priority queue seeds
+                    [reach_dists, priorities] = update(X(q_idx,:), X, epsilon, min_pts, priorities, q_is_idx_neighbor, reach_dists);
+                    
+                end
+                
+            end
             
         end
 
@@ -105,7 +133,7 @@ function core_dist = get_core_dist(p, X, epsilon, min_pts)
 end
 
 
-function [new_reach_dists, new_seeds] = update(p, X, epsilon, min_pts, seeds, is_idx_neighbor, reach_dists)
+function [new_reach_dists, new_priorities] = update(p, X, epsilon, min_pts, priorities, is_idx_neighbor, reach_dists)
 % get_core_dist Calculates the distance of each point in epsilon neighborhood
 % of p and returns the min_pt-th closest point
 %
@@ -115,7 +143,7 @@ function [new_reach_dists, new_seeds] = update(p, X, epsilon, min_pts, seeds, is
 
     % initialize as same values as original reachability dists and seeds
     new_reach_dists = reach_dists;
-    new_seeds = seeds;
+    new_priorities = priorities;
 
     % get core distance of p
     core_dist = get_core_dist(p, X, epsilon, min_pts);
@@ -128,21 +156,21 @@ function [new_reach_dists, new_seeds] = update(p, X, epsilon, min_pts, seeds, is
             % calculate new reachability dist as max of core dist and dist(p,o)
             curr_reach_dist = max(core_dist, pdist2(p, X(o_idx, :)));
 
-            if isnan(reach_dists(o_idx))
+            if isnan(reach_dists(o_idx)) || (curr_reach_dist < reach_dists(o_idx))
 
                 % update value of reachability distance
                 new_reach_dists(o_idx) = curr_reach_dist;
+                
+                % add to priority queue
+                new_priorities(o_idx) = curr_reach_dist;
 
-                % TODO
-                % Seeds.insert(o, new-reach-dist)
-
-            elseif (curr_reach_dist < reach_dists(o_idx))
-
-                % update value of reachability distance
-                new_reach_dists(o_idx) = curr_reach_dist;
-
-                % TODO
-                % Seeds.move-up(o, new-reach-dist)
+%             elseif (curr_reach_dist < reach_dists(o_idx))
+% 
+%                 % update value of reachability distance
+%                 new_reach_dists(o_idx) = curr_reach_dist;
+% 
+%                 % update priority queue
+%                 new_priorities(o_idx) = curr_reach_dist;
 
             end
     

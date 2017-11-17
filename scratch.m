@@ -9,8 +9,10 @@
 % foo
 % bar
 
-a = [1 1];
-b = [2 2];
-c = [2 3];
+priorities = [ -1 -1 -1 2 3 2 0 2 10 5 -1];
+priorities
 
-pdist2(b,a)
+[priorities, pr_pt_idx] = sort(priorities, 'descend');
+
+priorities
+pr_pt_idx
