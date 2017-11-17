@@ -1,8 +1,8 @@
 %% ORIGINAL DATA
 load fisheriris
 
-X = meas(:,3:4);
-y = grp2idx(categorical(species));
+% X = meas(:,3:4);
+% y = grp2idx(categorical(species));
 
 k = 3;
 
@@ -12,6 +12,11 @@ k = 3;
 % xlabel 'Petal Lengths (cm)';
 % ylabel 'Petal Widths (cm)';
 
+%% GENERATED DATA
+
+load('gen_data.mat');
+
+X = transpose(data);
 
 %% K-MEANS
 
@@ -52,12 +57,13 @@ end
 [~, k_preds] = min(dist_from_centroids, [], 2);
 
 figure;
-plot(X(k_preds==1,1), X(k_preds==1,2), 'r.', 'MarkerSize', 15);
-hold on
-plot(X(k_preds==2,1), X(k_preds==2,2), 'g.', 'MarkerSize', 15);
-hold on
-plot(X(k_preds==3,1), X(k_preds==3,2), 'b.', 'MarkerSize', 15);
-title 'k-means on Fisher''s Iris Data';
+
+for c_num = 1:max(k_preds)
+    scatter3(X(k_preds==c_num,1), X(k_preds==c_num,2), X(k_preds==c_num,3));
+    hold on
+end
+
+title 'k-means on Synthetic Data';
 
 
 %% K-MEANS++
@@ -99,12 +105,13 @@ end
 [~, kpp_preds] = min(dist_from_centroids, [], 2);
 
 figure;
-plot(X(kpp_preds==1,1), X(kpp_preds==1,2), 'r.', 'MarkerSize', 15);
-hold on
-plot(X(kpp_preds==2,1), X(kpp_preds==2,2), 'g.', 'MarkerSize', 15);
-hold on
-plot(X(kpp_preds==3,1), X(kpp_preds==3,2), 'b.', 'MarkerSize', 15);
-title 'k-means++ on Fisher''s Iris Data';
+
+for c_num = 1:max(kpp_preds)
+    scatter3(X(kpp_preds==c_num,1), X(kpp_preds==c_num,2), X(kpp_preds==c_num,3));
+    hold on
+end
+
+title 'k-means++ on synthetic Data';
 
 
 %% HELPER FUNCTIONS
