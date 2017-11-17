@@ -66,7 +66,7 @@ function [ordered_idx_list, reach_dists] = optics(X, epsilon, min_pts)
                 ordered_idx_list(find(isnan(ordered_idx_list),1), 1) = q_idx;
                 
                 % if core dist of q is undefined then update
-                if ~isnan(get_core_dist(X(q_idx)))
+                if ~isnan(get_core_dist(X(q_idx, :)))
                    
                     % get the updated reachability distances and priority queue seeds
                     update(X(q_idx,:), q_is_idx_neighbor);
@@ -109,6 +109,11 @@ function [ordered_idx_list, reach_dists] = optics(X, epsilon, min_pts)
     %
     % Returns core distance
 
+        % FOR DEBUG
+        if size(X,2) ~= size(p,2)
+            disp('error :(');
+        end
+    
         % distance of each point from p
         distances = pdist2(X, p, 'euclidean');
 
