@@ -27,6 +27,8 @@ function [varargout] = OPTICSv2(X, epsilon, min_points, varargin)
         is_visited(point) = true;
         order(order_counter) = point;
         order_counter = order_counter + 1;
+        
+        
         if ~isnan(CoreDist(point))
             seeds = NaN(num_samples, 1);
             update(point);
