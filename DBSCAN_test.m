@@ -6,15 +6,17 @@ load fisheriris
 % 
 % X = [cluster1; cluster2];
 
-X = meas(:,3:4);
+X = transpose(data);
 
-[assignments, li_noise] = DBSCAN(X, 0.5, 3);
+[assignments, li_noise] = DBSCAN(X, 1, 5);
 
 figure;
 
-for c_num = 1:max(assignments)
-    scatter(X(assignments==c_num,1), X(assignments==c_num,2), 'filled');
+for c_num = 0:max(assignments)
+    scatter3(X(assignments==c_num,1), X(assignments==c_num,2), X(assignments==c_num,3), 'filled');
     hold on
 end
 
-legend('Cluster1', 'Cluster2', 'Cluster3', 'Cluster4');
+legend('Noise', 'Cluster1', 'Cluster2', 'Cluster3', 'Cluster4', 'Cluster5', 'Cluster6', 'Cluster7', 'Cluster8', 'Cluster9');
+
+title 'DBSCAN on generated synthetic data'
