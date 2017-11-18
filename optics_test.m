@@ -1,7 +1,10 @@
 load fisheriris
 
-X = meas(:,3:4);
-y = grp2idx(categorical(species));
+load 'gen_data.mat'
+X = transpose(data);
+
+% X = meas(:,3:4);
+% y = grp2idx(categorical(species));
 
 % % shuffle dataset
 % idx = randperm(size(X,1));
@@ -10,10 +13,12 @@ y = grp2idx(categorical(species));
 
 % [order, reach_dists, core_dists] = OPTICSv2(X, 0.5, 5);
 
-[order, reach_dists] = optics(X, 0.5, 2);
+[order, reach_dists] = optics(X, 2, 7);
 
 % stem(order, reach_dists(order));
-plot(order, reach_dists);
+stem(order, reach_dists);
+ylabel 'Reachability distance'
+xlabel 'Order of points'
 title 'OPTICS on Fisher Iris'
 
 
