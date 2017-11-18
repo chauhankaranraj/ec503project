@@ -3,15 +3,16 @@ load fisheriris
 X = meas(:,3:4);
 y = grp2idx(categorical(species));
 
-% shuffle dataset
-idx = randperm(size(X,1));
-X = X(idx, :);
-y = y(idx,:);
+% % shuffle dataset
+% idx = randperm(size(X,1));
+% X = X(idx, :);
+% y = y(idx,:);
 
 % [order, reach_dists, core_dists] = OPTICSv2(X, 0.5, 5);
 
 [order, reach_dists] = optics(X, 0.5, 2);
 
+% stem(order, reach_dists(order));
 plot(order, reach_dists);
 title 'OPTICS on Fisher Iris'
 

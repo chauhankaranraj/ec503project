@@ -1,8 +1,8 @@
 %% ORIGINAL DATA
 load fisheriris
 
-% X = meas(:,3:4);
-% y = grp2idx(categorical(species));
+X = meas(:,3:4);
+y = grp2idx(categorical(species));
 
 k = 3;
 
@@ -12,11 +12,11 @@ k = 3;
 % xlabel 'Petal Lengths (cm)';
 % ylabel 'Petal Widths (cm)';
 
-%% GENERATED DATA
-
-load('gen_data.mat');
-
-X = transpose(data);
+% %% GENERATED DATA
+% 
+% load('gen_data.mat');
+% 
+% X = transpose(data);
 
 %% K-MEANS
 
@@ -59,12 +59,16 @@ end
 figure;
 
 for c_num = 1:max(k_preds)
-    scatter3(X(k_preds==c_num,1), X(k_preds==c_num,2), X(k_preds==c_num,3));
+    scatter(X(k_preds==c_num,1), X(k_preds==c_num,2), 'MarkerFaceColor', rand(1,3));
     hold on
 end
 
-title 'k-means on Synthetic Data';
+title 'k-means on Fisher Iris Data';
 
+figure;
+scatter(centroids(:,1), centroids(:,2), 'MarkerFaceColor', rand(1,3));
+disp(centroids);
+title 'k-means centroids for Fisher Iris Data'
 
 %% K-MEANS++
 
@@ -107,11 +111,16 @@ end
 figure;
 
 for c_num = 1:max(kpp_preds)
-    scatter3(X(kpp_preds==c_num,1), X(kpp_preds==c_num,2), X(kpp_preds==c_num,3));
+    scatter(X(kpp_preds==c_num,1), X(kpp_preds==c_num,2), 'MarkerFaceColor', rand(1,3));
     hold on
 end
 
-title 'k-means++ on synthetic Data';
+title 'k-means++ on Fisher Iris Data';
+
+figure;
+scatter(centroids(:,1), centroids(:,2), 'MarkerFaceColor', rand(1,3));
+disp(centroids);
+title 'k-means++ centroids for Fisher Iris Data'
 
 
 %% HELPER FUNCTIONS
