@@ -35,4 +35,3 @@ for c_num = 0:max(assignments)
     hold on
 end
 
-
