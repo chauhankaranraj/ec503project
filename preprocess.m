@@ -84,7 +84,16 @@ end
 all_data = horzcat(analysis_vals, metadata_vals);
 
 
-%% CLUSTER
+%% OPTICS
+
+% [order, reach_dists, core_dists] = OPTICSv2(X, 0.5, 5);
+[order, reach_dists] = optics(all_data, 0.00001, 1);
+
+% stem(order, reach_dists(order));
+stem(order, reach_dists);
+ylabel 'Reachability distance'
+xlabel 'Order of points'
+title 'OPTICS on Fisher Iris'
 
 
 

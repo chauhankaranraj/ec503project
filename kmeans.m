@@ -1,10 +1,12 @@
 %% ORIGINAL DATA
 load fisheriris
 
-X = meas(:,3:4);
-y = grp2idx(categorical(species));
+% X = meas(:,3:4);
+% y = grp2idx(categorical(species));
 
-k = 3;
+X = all_data;
+
+k = 2;
 
 % figure;
 % plot(X(:,1),X(:,2), 'k.','MarkerSize', 15);
@@ -21,7 +23,7 @@ k = 3;
 %% K-MEANS
 
 % randomly select k points as centroids
-centroids = get_initial_centroids(X, 3);
+centroids = get_initial_centroids(X, k);
 
 max_iterations = 100;
 for i=1:max_iterations
