@@ -11,8 +11,6 @@ all_files(1:3) = [];
 % number of data songs
 num_files = numel(all_files);
 
-disp(['Number of h5 files found: ',num2str(num_files)]);
-
 
 %% CONVERT TO DATA MATRIX
 
@@ -39,43 +37,55 @@ disp(['Number of h5 files found: ',num2str(num_files)]);
 % get_audio_md5                   get_segments_loudness_max       
 % get_bars_confidence             get_segments_loudness_max_time  
 
-num_features = 57;
-all_data = zeros(num_files, num_features);
-
+% first data point, to determine what features to extract
 dummy_file = HDF5_Song_File_Reader(strcat(data_path, all_files(1).name));
 
-fields = fieldnames(dummy_file.analysis);
-num_analysis_fields = 0;
-
+% remove useless categorical data
+analysis_fields = fieldnames(dummy_file.analysis);
 f_idx = 1;
-while f_idx ~= numel(fields)
+while f_idx <= numel(analysis_fields)
 
-    if ~ischar(dummy_file.analysis.(fields{f_idx}))
-        num_analysis_fields = num_analysis_fields + 1;
-        f_idx = f_idx + 1;
+    if ischar(dummy_file.analysis.(analysis_fields{f_idx}))
+        analysis_fields(f_idx) = [];
     else
-        fields(f_idx) = [];
+        f_idx = f_idx + 1;
     end
     
 end
 
-% num_analysis_fields = numel(fieldnames(dummy_file.analysis));
+% analysis data stored in a matrix
+num_analysis_fields = numel(analysis_fields);
+analysis_vals = zeros(num_files, num_analysis_fields);
 
-% analysis_vals = zeros(num_files, num_analysis_fields);
-% 
-% for file_idx = 1:num_files
-%     
-%     song = HDF5_Song_File_Reader(strcat(data_path, all_files(file_idx).name));
-%     analysis_vals(file_idx, :) = song.attr
-%     disp(song);
-%     
-% end
-% 
-% disp('done');
-% 
-% 
-% c = categorical({'Male','Female','Female','Male','Female'})
-% n = grp2idx(c)
+% TODO: THIS SHOULDN'T BE MANUAL
+% TODO: ADD CATEGORICAL DATA TOO!
+% useful metadata fields
+metadata_fields = {'artist_hotttnesss', 'artist_latitude', 'artist_longitude', 'idx_artist_terms', 'idx_similar_artists', 'song_hotttnesss'};
+num_metadata_fields = numel(metadata_fields);
+metadata_vals = zeros(num_files, num_metadata_fields);
+
+for file_idx = 1:num_files
+    
+    song = HDF5_Song_File_Reader(strcat(data_path, all_files(file_idx).name));
+    
+    % store all analysis data as matrix entries
+    for f_idx = 1:num_analysis_fields
+        analysis_vals(file_idx, f_idx) = song.analysis.(analysis_fields{f_idx});
+    end
+    
+    % store all metadata as matrix entries
+    for f_idx = 1:num_metadata_fields
+        metadata_vals(file_idx, f_idx) = song.metadata.(metadata_fields{f_idx});
+    end
+    
+end
+
+% combine all the data
+all_data = horzcat(analysis_vals, metadata_vals);
+
+
+%% CLUSTER
+
 
 
 

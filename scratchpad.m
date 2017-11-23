@@ -1,9 +1,12 @@
-load fisheriris
+level = 5;
+semester = 'Fall';
+subject = 'Math';
+student = 'John_Doe';
+fieldnames = {semester subject student};
 
-X = meas(:,3:4);
+% Add data to a structure named grades.
+grades(level).(semester).(subject).(student)(10,21:30) = ...
+             [85, 89, 76, 93, 85, 91, 68, 84, 95, 73];
 
-[foo, bar] = unique(X(:,1));
-[fee, bur] = unique(X(:,2));
-
-all_idx = union(bar, bur);
-X = X(all_idx, :);
+% Retrieve the data added.
+getfield(grades, {level}, fieldnames{:}, {10,21:30})
