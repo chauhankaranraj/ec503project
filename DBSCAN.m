@@ -40,7 +40,7 @@ DBSCAN(DB, dist, eps, minPts) {
 
     % init vars
     num_clusters = 0;
-    DM = pdist2(X, X, dist_type); % DM stands for distance matrix
+%     DM = pdist2(X, X, dist_type); % DM stands for distance matrix
     assignments = zeros(num_samples, 1);
     li_visited = false(num_samples, 1);
     li_noise = false(num_samples, 1);
@@ -61,7 +61,8 @@ DBSCAN(DB, dist, eps, minPts) {
     % returns the points that are considered the neighboours of the input
     % point given by the index 'idx'
     function li_neighbours = get_neighbours(idx)
-        li_neighbours = DM(:, idx) <= epsilon;
+        distances = sqrt(sum((X - X(idx,:)) .^ 2, 2));
+        li_neighbours = distances <= epsilon;
     end
     
 
