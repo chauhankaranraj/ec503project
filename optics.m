@@ -96,8 +96,8 @@ function [ordered_idx_list, reach_dists] = optics(X, epsilon, min_pts)
         % return indices of points which are in eps neighborhood of p
         is_neighbors = distances <= epsilon;
         
-        % point is not neighbor of itself
-        is_neighbors(pt_idx) = false;
+%         % point is not neighbor of itself
+%         is_neighbors(pt_idx) = false;
 
     end
 
