@@ -108,17 +108,12 @@ function [ordered_idx_list, reach_dists] = optics(X, epsilon, min_pts)
     % Assumes each column of X (nxd) is dimension and each row is data point
     %
     % Returns core distance
-
-        % FOR DEBUG
-        if size(X,2) ~= size(p,2)
-            disp('error :(');
-        end
     
         % distance of each point from p
         distances = pdist2(X, p, 'euclidean');
 
         % indices of points which are in eps neighborhood of p
-        neighbors_idx = distances >= epsilon;
+        neighbors_idx = distances <= epsilon;
 
         % core dist undefined if number of pts in eps neighborhood is < MinPts
         if sum(neighbors_idx) < min_pts
