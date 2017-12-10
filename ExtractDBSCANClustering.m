@@ -1,4 +1,4 @@
-function assignments = ExtractDBSCANFromOrdPts(X, ordered_idx, reachability_dists, eps, min_pts)
+function assignments = ExtractDBSCANClustering(X, ordered_idx, reachability_dists, eps, min_pts)
 % ExtractDBSCANFromOrdPts Takes output of the OPTICS algorithm as input and
 %                         exploits it to cluster dataset using DBSCAN
 %
