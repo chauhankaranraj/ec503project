@@ -35,30 +35,31 @@ rng(1);
 %% OPTICS
 
 % % Cross validate for minpts
-% for i = 1:10
+% for i = 1:20
+%     % get the order and reachability distances
+%     [ordered_list, r_dists] = optics(data, eps, i);
 % 
-% % get the order and reachability distances
-% [ordered_list, r_dists] = optics(data, eps, i);
+%     % % TODO: would doing this everywhere simplify life?
+%     % % replace nan's with infinites
+%     % r_dists(isnan(r_dists)) = 50;
 % 
-% % % TODO: would doing this everywhere simplify life?
-% % % replace nan's with infinites
-% % r_dists(isnan(r_dists)) = 50;
-% 
+%     % reachability plot
+%     figure;
+%     plot(1:size(r_dists), r_dists);
+% end
+
+new_eps = 1.2;
+new_min_pts = 2;
+
+% get the order and reachability distances for new estimates of eps, minPts
+[ordered_list, r_dists] = optics(data, eps, min_pts);
+
 % % reachability plot
 % figure;
 % plot(1:size(r_dists), r_dists);
-% end
-
-% get the order and reachability distances
-[ordered_list, r_dists] = optics(data, 5, 1);
-
-% reachability plot
-figure;
-plot(1:size(r_dists), r_dists);
 
 % estimate new eps using reachability plot, then get optics labels
-new_eps = 100;
-optics_labels = ExtractDBSCANClustering(data, ordered_list, r_dists, 1.575, 2);
+optics_labels = ExtractDBSCANClustering(data, ordered_list, r_dists, new_eps, min_pts);
 
 % plot optics results
 figure;
