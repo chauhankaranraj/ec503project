@@ -12,8 +12,8 @@ data = transpose(data(1:2, :));
 %% PARAMETERS FOR DBSCAN, OPTICS
 
 % 4, 1.25, 2, 0.9
-eps = 0.9;
-min_pts = 2;
+eps = 1.25;
+min_pts = 4;
 rng(1);
 
 %% DBSCAN
@@ -46,7 +46,7 @@ figure;
 plot(1:size(r_dists), r_dists);
 
 % estimate new eps using reachability plot, then get optics labels
-new_eps = 0.8;
+new_eps = 100;
 optics_labels = ExtractDBSCANClustering(data, ordered_list, r_dists, eps, min_pts);
 
 % plot optics results
