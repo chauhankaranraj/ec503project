@@ -16,6 +16,7 @@ X = transpose(data(1:2, :));
 
 k = 2;
 
+% % plot raw data
 % figure;
 % plot(X(:,1),X(:,2), 'k.','MarkerSize', 15);
 % title 'Fisher''s Iris Data';
@@ -30,46 +31,12 @@ k = 2;
 
 %% K-MEANS
 
-% randomly select k points as centroids
-centroids = get_initial_centroids(X, k);
+% get assignments and within cluster sum of squares
+[assignments, wcss] = k_means(X, k, 100);
 
-max_iterations = 100;
-
-% wcss at each iter
-wcss = zeros(max_iterations, 1);
-
-for i=1:max_iterations
-
-    % find which is the closest centroid for each point
-    assignments = get_assignments(X, centroids);
-    
-    k_wcss = 0;
-    
-    for j = 1:k
-        
-        % get all points correspoding to centroid j
-        centroid_pts_idx = assignments == j;
-        
-        k_wcss = k_wcss + sum(sum(pdist2(centroids(j, :), X(centroid_pts_idx, :), 'squaredeuclidean')));
-
-        % set new centroid j as mean of all points closest to previous j
-        centroids(j, :) = mean(X(centroid_pts_idx, :));
-
-    end
-    
-    % wcss for this iter
-    wcss(i) = k_wcss;
-    
-end
-
+% plot the objective function vs num_iter
 figure;
-scatter(1:max_iterations, wcss);
-
-% figure;
-% plot(centroids(:,1), centroids(:,2), 'k.','MarkerSize', 15);
-% title 'K-means centroids for Fisher''s Iris Data';
-% xlabel 'Petal Lengths (cm)';
-% ylabel 'Petal Widths (cm)';
+plot(1:numel(wcss), wcss);
 
 % calculate distance of each point from each centroid
 dist_from_centroids = NaN(size(X,1), k);
@@ -80,17 +47,17 @@ end
 % select closest centroid as representative class
 [~, k_preds] = min(dist_from_centroids, [], 2);
 
+% plot kmeans assignments
 figure;
-
 for c_num = 1:max(k_preds)
-    scatter(X(k_preds==c_num,1), X(k_preds==c_num,2), 'MarkerFaceColor', rand(1,3));
+    scatter(X(k_preds==c_num,1), X(k_preds==c_num,2), 'filled');
     hold on
 end
-
 title 'k-means on Fisher Iris Data';
 
+% plot kmeans centroids
 figure;
-scatter(centroids(:,1), centroids(:,2), 'MarkerFaceColor', rand(1,3));
+scatter(centroids(:,1), centroids(:,2), 'filled');
 disp(centroids);
 title 'k-means centroids for Fisher Iris Data'
 
