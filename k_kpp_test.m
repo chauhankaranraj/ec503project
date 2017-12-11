@@ -14,7 +14,7 @@ rng(10);
 % X = transpose(data);
 
 % read in COMPOUND data
-fileID = fopen('../preprocess/flame.txt', 'r');
+fileID = fopen('flame.txt', 'r');
 data = fscanf(fileID, '%f %f %i\n', [3 399]);
 fclose(fileID);
 
