@@ -1,4 +1,4 @@
-function [centroids, wcss] = k_means_pp(X, k, max_iter)
+function [assignments, centroids, wcss] = k_means_pp(X, k, max_iter)
 
     % if max iterations is not explicitly specified, set it to 100
     if ~exist('max_iter', 'var')
@@ -40,7 +40,13 @@ function [centroids, wcss] = k_means_pp(X, k, max_iter)
 
     end
     
-    
+%     % pick closest cluster as assigment 
+%     dist_from_centroids = NaN(size(X,1), k);
+%     for c = 1:k
+%         dist_from_centroids(:, c) = sum((X - kpp_centroids(c, :)).^2, 2);
+%     end
+%     [~, kpp_preds] = min(dist_from_centroids, [], 2);
+
     % HELPER FUNCTIONS
     
     function closest_centroids = get_assignments()

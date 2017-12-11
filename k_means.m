@@ -1,4 +1,4 @@
-function [centroids, wcss] = k_means(X, k, max_iter)
+function [assignments, centroids, wcss] = k_means(X, k, max_iter)
 
     % if max iterations is not explicitly specified, set it to 100
     if ~exist('max_iter', 'var')
