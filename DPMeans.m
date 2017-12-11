@@ -1,7 +1,7 @@
 % ENG EC 503 - Fall 2017
 % DP Means Implementation for Final Project
 
-function [assignments, k, varargout] = DPMeans(X, lambda)
+function [assignments, k, varargout,wcss] = DPMeans(X, lambda)
 %% Init
 t_max = 100;
 num_samples = size(X, 1);
@@ -12,6 +12,7 @@ centroids = mean(X);
 % and all the points in the same global mean cluster
 assignments = ones(1, num_samples);
 k = 1;
+ wcss = zeros(t_max, 1);
 
 
     for t = 1:t_max
@@ -27,9 +28,18 @@ k = 1;
                 % and assign its centroid to be the point itself
                 centroids = cat(1, centroids, X(i, :));
                 DM = pdist2(X, centroids);
+                size(centroids);
+                fprintf('%d',size(X(assignments, :)));
+                fprintf('%s\n'," ");
+                assignments(i) = find(min(DM(i, :)) == DM(i, :));
+                %wcss(i) = wcss(i) + sum(sum(pdist2(centroids(i, :), X(assignments, :), 'squaredeuclidean')));
+
+                %wcss(i) = wcss(i) + sum(sum(pdist2(centroids(j, :), X(centroid_pts_idx, :), 'squaredeuclidean')));
             else
                 % otherwise assign it to the closest centroid
                 assignments(i) = find(min(DM(i, :)) == DM(i, :));
+                % fprintf('%d',size(centroids));
+               % fprintf('%s\n'," ");
             end
         end
         

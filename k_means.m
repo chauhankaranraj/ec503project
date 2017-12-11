@@ -24,6 +24,7 @@ function [assignments, wcss] = k_means(X, k, max_iter)
             centroid_pts_idx = assignments == j;
 
             wcss(i) = wcss(i) + sum(sum(pdist2(centroids(j, :), X(centroid_pts_idx, :), 'squaredeuclidean')));
+            
 
             % set new centroid j as mean of all points closest to previous j
             centroids(j, :) = mean(X(centroid_pts_idx, :));
