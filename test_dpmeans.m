@@ -1,5 +1,10 @@
 load fisheriris
 
-[assignments, k] = DPMeans(meas, 2.5);
+[assignments, k, obj_func] = FacilityMeans(meas, 5);
 
+figure(1)
 gscatter(meas(:, 3), meas(:, 4), assignments)
+
+
+figure(2)
+plot(obj_func, 'linewidth', 2)
