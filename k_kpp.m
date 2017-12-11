@@ -12,7 +12,7 @@ fclose(fileID);
 
 % split x and y, represent data as rows
 y = transpose(data(3, :));
-data = transpose(data(1:2, :));
+X = transpose(data(1:2, :));
 
 k = 2;
 
