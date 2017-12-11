@@ -1,7 +1,7 @@
 %% LOAD DATA
 
 % read in combined data
-fileID = fopen('../preprocess/flame.txt', 'r');
+fileID = fopen('../preprocess/Compound.txt', 'r');
 data = fscanf(fileID, '%f %f %i\n', [3 399]);
 fclose(fileID);
 

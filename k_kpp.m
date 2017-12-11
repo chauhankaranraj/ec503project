@@ -1,10 +1,18 @@
 %% ORIGINAL DATA
-load fisheriris
+% load fisheriris
 
 % X = meas(:,3:4);
 % y = grp2idx(categorical(species));
+% X = all_data;
 
-X = all_data;
+% read in combined data
+fileID = fopen('../preprocess/Compound.txt', 'r');
+data = fscanf(fileID, '%f %f %i\n', [3 399]);
+fclose(fileID);
+
+% split x and y, represent data as rows
+y = transpose(data(3, :));
+data = transpose(data(1:2, :));
 
 k = 2;
 
@@ -26,22 +34,36 @@ k = 2;
 centroids = get_initial_centroids(X, k);
 
 max_iterations = 100;
+
+% wcss at each iter
+wcss = zeros(max_iterations, 1);
+
 for i=1:max_iterations
 
     % find which is the closest centroid for each point
-    closest_centroids = get_closest_centroids(X, centroids);
+    assignments = get_assignments(X, centroids);
+    
+    k_wcss = 0;
     
     for j = 1:k
         
         % get all points correspoding to centroid j
-        centroid_pts_idx = closest_centroids == j;
+        centroid_pts_idx = assignments == j;
         
+        k_wcss = k_wcss + sum(sum(pdist2(centroids(j, :), X(centroid_pts_idx, :), 'squaredeuclidean')));
+
         % set new centroid j as mean of all points closest to previous j
         centroids(j, :) = mean(X(centroid_pts_idx, :));
-    
+
     end
     
+    % wcss for this iter
+    wcss(i) = k_wcss;
+    
 end
+
+figure;
+scatter(1:max_iterations, wcss);
 
 % figure;
 % plot(centroids(:,1), centroids(:,2), 'k.','MarkerSize', 15);
@@ -81,12 +103,12 @@ max_iterations = 100;
 for i=1:max_iterations
     
     % find which is the closest centroid for each point
-    closest_centroids = get_closest_centroids(X, centroids);
+    assignments = get_assignments(X, centroids);
     
     for j = 1:k
         
         % get all points correspoding to centroid j
-        centroid_pts_idx = closest_centroids == j;
+        centroid_pts_idx = assignments == j;
         
         % set new centroid j as mean of all points closest to previous j
         centroids(j, :) = mean(X(centroid_pts_idx, :));
@@ -127,8 +149,8 @@ title 'k-means++ centroids for Fisher Iris Data'
 
 %% HELPER FUNCTIONS
 
-function closest_centroids = get_closest_centroids(X, centroids)
-% get_closest_centroids  Finds closest centroid to each point
+function closest_centroids = get_assignments(X, centroids)
+% get_assignments  Finds closest centroid to each point
 %
 % Assumes each column of X (nxd) is dimension and each row is data point
 % Each column of centroids (kxd) is dimension and each row is data point

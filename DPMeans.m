@@ -13,6 +13,7 @@ centroids = mean(X);
 assignments = ones(1, num_samples);
 k = 1;
 
+
     for t = 1:t_max
         %% Assignment Step
         % calc distances from all points to all centroids
