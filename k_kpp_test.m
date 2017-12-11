@@ -63,7 +63,7 @@ title 'k-means';
 % pick closest cluster as assigment 
 dist_from_centroids = NaN(size(X,1), k);
 for c = 1:k
-    dist_from_centroids(:, c) = sum((X - centroids(c, :)).^2, 2);
+    dist_from_centroids(:, c) = sum((X - kpp_centroids(c, :)).^2, 2);
 end
 [~, kpp_preds] = min(dist_from_centroids, [], 2);
 
@@ -91,6 +91,6 @@ title 'Objective Function vs Number of  Iterations';
 figure;
 scatter(k_centroids(:,1), k_centroids(:,2), 50, 's');
 hold on;
-scatter(centroids(:,1), centroids(:,2), 100, 'd');
+scatter(kpp_centroids(:,1), kpp_centroids(:,2), 100, 'd');
 legend('kmeans', 'kmeans++');
 title 'Cluster Centroids'
