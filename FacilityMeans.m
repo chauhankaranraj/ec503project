@@ -10,14 +10,14 @@ num_features = size(X, 2);
 % start with the global mean as the only cluster center
 F_prime = mean(X);
 % and all the points in the same global mean cluster
-assignments = ones(1, num_samples);
 obj_func = zeros(1, t_max);
 
     for t = 1:t_max
         %% Assignment Step
         % start with empty facility list
+        assignments = NaN(1, num_samples);
         DM = pdist2(X, F_prime, 'squaredeuclidean');
-        faraway_points = X(all(transpose(DM > lambda)));
+        faraway_points = X(all(DM > lambda, 2), :);
         
         % candidate facility list
         F = cat(1, F_prime, faraway_points);
@@ -75,7 +75,8 @@ obj_func = zeros(1, t_max);
                 end
             end
             
-            F_prime = cat(1, F_prime, F(best_facility_idx, :));
+            tmp = cat(1, F_prime, F(best_facility_idx, :));
+            F_prime = tmp;
             F(best_facility_idx, :) = [];
             assignments(best_facility_clients) = k;
             k = k + 1;
@@ -84,6 +85,13 @@ obj_func = zeros(1, t_max);
             running_cost = running_cost + best_facility_cost;
             % dont look at these points again
             DM(best_facility_clients, :) = Inf;
+            
+            if (isempty(F))
+                break
+            end
+%             if (isempty(F) && num_assigned ~= num_samples)
+%                 F = X(isnan(assignments), :);
+%             end
         end
         
         obj_func(t) = running_cost;
@@ -96,11 +104,11 @@ obj_func = zeros(1, t_max);
     end
     
     if nargout == 3
-        varargout{1} = F_prime;
+        varargout{1} = obj_func;
     elseif nargout == 4
-        varargout{1} = F_prime;
-        varargout {2} = obj_func;
-    end    
+        varargout{1} = obj_func;
+        varargout {2} = F_prime;
+    end
 end
 
 

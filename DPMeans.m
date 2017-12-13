@@ -53,5 +53,8 @@ obj_func = zeros(1, t_max);
     
     if nargout == 3
         varargout{1} = obj_func;
+    elseif nargout == 4
+        varargout{1} = obj_func;
+        varargout{2} = centroids;
     end
 end
