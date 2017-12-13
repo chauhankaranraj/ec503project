@@ -65,7 +65,6 @@ for i = 4:4
     title 'Reachability Plot, MinPts=4, Eps=1.5'
 end
 
-
 % get the order and reachability distances for new estimates of eps, minPts
 [ordered_list, r_dists] = optics(data, eps, min_pts);
 
