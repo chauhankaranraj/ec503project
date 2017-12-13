@@ -45,6 +45,9 @@ end
 legend(num2str(transpose(1:k)));
 title 'kmeans, k = 2';
 
+% nmi score
+k_nmi = nmi(k_assignments, y);
+
 
 %% K-MEANS++
 
@@ -60,6 +63,9 @@ end
 legend(num2str(transpose(1:k)));
 title 'k-means++';
 
+% nmi score
+kpp_nmi = nmi(kpp_assignments, y);
+
 
 %% DP-MEANS
 
@@ -73,6 +79,9 @@ for c_num = 1:max(dp_assignments)
 end
 legend(num2str(transpose(1:dp_k)));
 title 'DP means';
+
+% nmi score
+dp_nmi = nmi(dp_assignments, y);
 
 
 %% COMPARE K, K++, DP

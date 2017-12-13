@@ -26,21 +26,24 @@ min_pts = 4;
 
 %% DBSCAN
 
-% % get dbscan cluster assignments
-% [dbscan_labels, noise_idx] = DBSCAN(data, eps, min_pts);
-% 
-% % plot dbscan results
-% figure;
-% for cluster_num = min(dbscan_labels):max(dbscan_labels)
-%     idx = dbscan_labels==cluster_num;
-%     scatter(data(idx, 1), data(idx, 2), 'filled');
-%     hold on;
-% end
-% legend(num2str(unique(dbscan_labels)));
-% xlabel 'x1'
-% ylabel 'x2'
-% title 'DBSCAN, Eps=1, MinPts=2'
-% hold off;
+% get dbscan cluster assignments
+[dbscan_labels, noise_idx] = DBSCAN(data, eps, min_pts);
+
+% plot dbscan results
+figure;
+for cluster_num = min(dbscan_labels):max(dbscan_labels)
+    idx = dbscan_labels==cluster_num;
+    scatter(data(idx, 1), data(idx, 2), 'filled');
+    hold on;
+end
+legend(num2str(unique(dbscan_labels)));
+xlabel 'x1'
+ylabel 'x2'
+title 'DBSCAN, Eps=1, MinPts=2'
+hold off;
+
+% nmi score
+dbscan_nmi = nmi(dbscan_labels, y);
 
 
 %% OPTICS
@@ -88,3 +91,7 @@ xlabel 'x1'
 ylabel 'x2'
 title 'OPTICS, Eps=1.25, Eps"=1.15, MinPts=4'
 hold off;
+
+% nmi score
+optics_nmi = nmi(optics_labels, y);
+

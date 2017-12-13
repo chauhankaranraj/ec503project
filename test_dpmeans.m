@@ -1,8 +1,8 @@
 load fisheriris
 
-[assignments, k, wcss] = DPMeans(meas, 2.5);
+[dp_assignments, dp_k, dp_obj_func, dp_centroids] = DPMeans(meas, 6);
 
-gscatter(meas(:, 3), meas(:, 4), assignments)
+[f_assignments, f_k, f_obj_func, f_centroids] = FacilityMeans(meas, 12);
 
-plot(1:numel(wcss), wcss);
-title 'Objective Function vs Number of  Iterations';
+figure(1)
+gscatter(meas(:, 3), meas(:, 4), f_assignments)
