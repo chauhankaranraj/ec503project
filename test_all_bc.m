@@ -1,5 +1,8 @@
 %% LOAD DATA
 
+% for reproducability
+rng(10);
+
 fileID = fopen('./bc/wdbc.data');
 X = textscan(fileID,'%d, %c, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f');
 fclose(fileID);
@@ -57,11 +60,13 @@ dp_nmi = nmi(dp_assignments, y);
 
 %% DBSCAN
 
-% init dbscan parameters
-eps = 10;
-min_pts = 4;
+
 
 % % CROSS VALIDATE FOR DBSCAN PARAMETERS
+% 
+% % init dbscan parameters
+% eps = 10;
+% min_pts = 4;
 % 
 % % distance matrix
 % DM = pdist2(X, X);
